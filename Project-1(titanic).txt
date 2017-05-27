@@ -1,0 +1,35 @@
+
+NOTE-1:- I have tried each and every command it work successufully.But some how I was unable to take the screenshots of it 
+       So please consider this queries.  
+
+NOTE-2 :- I found that there were no change in project 1 and project 2.So commiting same queries
+          Please let me know if there is any other project-2 which I am not able to see.  
+		
+
+
+
+
+Crime = LOAD '/pigInput7' using PigStorage(',') AS
+(ID:int,CaseNumber:chararray,Date:chararray,Block:chararray,IUCR:chararray,PrimaryType:chararray,Description:chararray,
+LocationDescription:chararray,Arrest:chararray,Domestic:chararray,Beat:chararray,District:chararray,Ward:chararray,CommunityArea:chararray,FBICode:chararray,
+XCoordinate:chararray,YCoordinate:chararray,Year:chararray,UpdatedOn:chararray,Latitude:chararray,Longitude:chararray,Location:chararray);
+
+(1)
+group_Crime = GROUP Crime BY FBICode;
+Crime_FBICode = foreach group_Crime generate group,Crime.ID; 
+result = foreach Crime_FBICode generate COUNT(group_Crime.FBICode);
+
+(2)
+Crimefbicode = FILTER Crime BY FBICode == '32';
+fbicodegroup = GROUP Crimefbicode by FBICode;
+Crimecount = FOREACH filter_Crime GENERATE group,COUNT(Crimefbicode.FBICode);
+
+(3)
+
+Crimetheft = FILTER Crime BY (PrimaryType == 'THEFT' AND Arrest == 'true');
+crimedistrict = GROUP Crimetheft BY District;
+Crimecount = FOREACH crimedistrict GENERATE group,COUNT(Crimetheft.PrimaryType);
+
+(4)
+Crimebetween =  FILTER Crime BY (Date >= '01/10/2014 00:00:00 PM' and Date <='01/10/2015 00:00:00 PM');
+
